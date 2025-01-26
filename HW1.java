@@ -1,6 +1,6 @@
 
 /*
- * *** PLACE YOUR NAME / SECTION  HERE ***
+ * *** Wyatt Harris - COMP272 001 ***
  *
  * Homework # 1 (Programming Assignment). This Java class defines some basic
  * manipulation operations on Linked-Lists and Stacks.
@@ -86,9 +86,19 @@ public class HW1 {
          * found in the linked-list that is less than thr parameter value passed.
          */
         public void removeElementsLT ( int ltValue ) {
-
+            //Okay, array is sorted, let's just keep eliminating until we reach the value.
             // YOUR CODE GOES HERE
-
+            if (this.head == null) {
+                return;
+            }
+            else {
+                Node current = this.head;
+                while (current.next != null && current.data < ltValue) {
+                    this.head = current;
+                    current = current.next;
+                }
+                this.head = current;
+            }
             return;
         }
 
@@ -99,9 +109,50 @@ public class HW1 {
          */
 
         public void removeElement ( int value ) {
-
+            //I didn't realize the list was sorted, so this method works on unsorted lists.
+            //A better design could operate without touching every element, but I did not implement this.
             // YOUR CODE GOES HERE
 
+            //Empty test
+            if (this.head == null) {
+                return;
+            }
+
+            else {
+                Node cursor = this.head;
+                //First check the heads
+                while (cursor == this.head) {
+                    if (cursor.data == value) {
+                        if (cursor.next != null) {
+                            this.head = cursor.next;
+                            cursor = this.head;
+                        }
+                        else {
+                            this.head = null;
+                            return; //Nothing left
+                        }
+                    }
+                    else {
+                        cursor = cursor.next;
+                    }
+                }
+                //Still elements left? Execute on remaining elements.
+                Node prev = this.head;
+                Node next = cursor;
+                while (cursor.next != null) {
+                    next = cursor.next;
+                    if (cursor.data == value) {
+                        prev.next = next;
+                    }
+                    else if (next.next != null) {
+                        prev = cursor;
+                    }
+                    cursor = next;
+                }
+                if (cursor.data == value){
+                    prev.next = null;
+                }
+            }
             return;
         }
 
@@ -151,17 +202,36 @@ public class HW1 {
          * or 'false' on if the passed in parameter string is a palindrome or not.
          *
          * The routine should be case insensitive! Meaning 'RaCe cAr' is a palindrome.
-         * Moreover, spaces are ignore, so both 'race car' and 'racecar' are plaindromes.
+         * Moreover, spaces are ignored, so both 'race car' and 'racecar' are plaindromes.
          *
          * The method should utilize the provided Stack class.
          */
         public static boolean isPalindrome(String input) {
 
-            Stack<Character> stack = new Stack<>();
+            Stack<Character> stack1= new Stack<>();
+            Stack<Character> stack2 = new Stack<>();
+
             input = input.toLowerCase().replaceAll("\\s+", "");
 
             // Your CODE GOES HERE
-            return false;
+            for (int i = 0; i < input.length(); i++) {
+                stack1.push(input.charAt(i));
+            }
+            for (int i = 0; i < ((input.length())/2); i++) {
+                char tmp = stack1.pop();
+                stack2.push(tmp);
+            }
+            if(input.length()%2!=0){
+                stack1.pop();
+            }
+            while (!stack1.isEmpty() && !stack2.isEmpty()) {
+                char temp = stack1.pop();
+                char temp2 = stack2.pop();
+                if (temp != temp2) {
+                    return false;
+                }
+            }
+            return true;
         }
 
 
@@ -178,12 +248,33 @@ public class HW1 {
          * destroy the passed in stack, meaning when the method returns, the passed in
          * stack should be identical to when this method is passed. One trick as you
          * pop elements off the passed in stack, place them in a temp stack. Then when
-         * completed, place them all back in teh original stack.
+         * completed, place them all back in the original stack.
          */
         public static int findLargestK(Stack<Integer> stack, int k) {
+            Stack<Integer> stack1 = new Stack<>();
+            Stack<Integer> stack2 = new Stack<>();
+            int largest = 0;
+            int index = 0;
+            int result = 0;
+            while (! stack.isEmpty()) {
+                int temp = stack.pop();
+                stack1.push(temp);
+                stack2.push(temp);
+            }
+            while (! stack1.isEmpty()) {
+                int temp = stack1.pop();
+                stack.push(temp); //Restore stack
+            }
+            while (! stack2.isEmpty()) {
+                int temp = stack2.pop();
+                if (temp == k) {
+                    result = index;
+                }
+                index++;
+            }
 
             // YOUR CODE GOES HERE
-            return -1;
+            return result;
         }
 
     }  // End class Stacks
@@ -212,14 +303,14 @@ public class HW1 {
          * Select the correct option listed below:
          *   1. O(N * M) time, O(1) space
          *   2. O(N + M) time, O(N + M) space
-         *   3. O(N + M) time, O(1) space
+         *   3. O(N + M) time, O(1) space *****
          *   4. O(N * M) time, O(N + M) space
          *
          * TODO: return the answer (which option is correct), in the return statement
-        */
+         */
 
         // RETURN THE CORRECT OPTION NUMBER LISTED ABOVE
-        return -1;
+        return 3;
     }
 
 
@@ -240,8 +331,7 @@ public class HW1 {
          */
 
         // RETURN THE CORRECT OPTION LISTED ABOVE
-        return -1;
+        return 2;
     }
 
 }
-
